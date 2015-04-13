@@ -48,7 +48,7 @@
    (list (format nil "    cmp #'~a', d0" regex))
    (case failure-cont-label
      (success (list (format nil "    bne FAIL_SUCCESS")))
-     (failure (list (format nil "    bne FAILURE")))
+     ;(failure (list (format nil "    bne FAILURE")))
      (t (list (format nil "    bne FAIL"))))
    (case success-cont-label
      (success
@@ -98,7 +98,11 @@
           (append
            (list
             (format nil "    subq.l #2, a0")
-            (format nil "    move.w #~a, (a0)" success-cont-label)
+            (format nil "    move.w #~a, (a0)"
+                    (case success-cont-label
+                      (recur current-label)
+                      (otherwise success-cont-label)))
+              
             (format nil "    bra ~a" a-label))
            a-code))))
 
